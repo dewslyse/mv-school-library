@@ -3,7 +3,7 @@ require_relative 'student'
 require_relative 'teacher'
 
 class App
-  attr_reader :books
+  attr_reader :all_books, :all_persons
 
   def initialize
     @all_books = []
@@ -15,6 +15,13 @@ class App
     @all_books.each do |book|
       puts "Title: \"#{book.title}\", Author: #{book.author}"
     end
+  end
+
+  def list_people
+    puts 'All persons'
+    @all_persons.each do |person|
+      puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+    end    
   end
 
   def create_person
