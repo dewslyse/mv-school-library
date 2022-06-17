@@ -1,8 +1,17 @@
 require_relative 'book'
 
 class App
+  attr_reader :books
+
   def initialize
-    @books = []
+    @all_books = []
+  end
+
+  def list_books
+    puts 'All books'
+    @all_books.each do |book|
+      puts "Title: \"#{book.title}\", Author: #{book.author}"
+    end
   end
 
   def create_book
@@ -12,6 +21,6 @@ class App
     print 'Author: '
     author = gets.chomp
     puts 'Book created successfully'
-    @books << Book.new(title, author)
+    @all_books << Book.new(title, author)
   end
 end
