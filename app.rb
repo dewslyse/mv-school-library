@@ -23,7 +23,7 @@ class App
     puts 'All persons'
     @all_persons.each do |person|
       puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-    end    
+    end
   end
 
   def create_person
@@ -71,7 +71,7 @@ class App
     puts 'Select a person from the following list by number (not id)'
     @all_persons.each_with_index do |person, index|
       puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
-    end 
+    end
     selected_person = gets.chomp.to_i
 
     puts 'Enter rental date [yyyy/mm/dd]'
@@ -80,5 +80,21 @@ class App
 
     @all_rentals << Rental.new(date, @all_books[selected_book], @all_persons[selected_person])
     puts 'Rental created successfully'
+  end
+
+  def list_rentals
+    puts 'ID of person: '
+    id = get.chomp
+
+    person = @all_persons.find { |item| id == item.id }
+
+    if person
+      puts 'Rentals:'
+      person.rentals.each do |rental|
+        puts "Date: #{rental.date}, Book \"#{rental.book.title}\" by #{rental.book.author}"
+      end
+    else
+      puts 'Person ID does not exist'
+    end
   end
 end
