@@ -17,6 +17,7 @@ class App
     @all_books.each do |book|
       puts "Title: \"#{book.title}\", Author: #{book.author}"
     end
+    puts
   end
 
   def list_people
@@ -24,6 +25,7 @@ class App
     @all_persons.each do |person|
       puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
     end
+    puts
   end
 
   def create_person
@@ -48,7 +50,8 @@ class App
       specialization = gets.chomp
       @all_persons << Teacher.new(specialization, age, name)
     end
-    puts 'Person created successfully'
+    puts "Person created successfully \n"
+    puts
   end
 
   def create_book
@@ -59,12 +62,13 @@ class App
     author = gets.chomp
     @all_books << Book.new(title, author)
     puts 'Book created successfully'
+    puts
   end
 
   def create_rental
     puts 'Select a book from the following list by number'
     @all_books.each_with_index do |book, index|
-      puts "#{index} Title: \"#{book.title}\", Author: #{book.author}"
+      puts "#{index}) Title: \"#{book.title}\", Author: #{book.author}"
     end
     selected_book = gets.chomp.to_i
 
@@ -79,12 +83,12 @@ class App
     date = gets.chomp
 
     @all_rentals << Rental.new(date, @all_books[selected_book], @all_persons[selected_person])
-    puts 'Rental created successfully'
+    puts "Rental created successfully \n\n"
   end
 
   def list_rentals
     puts 'ID of person: '
-    id = get.chomp
+    id = gets.chomp
 
     person = @all_persons.find { |item| id == item.id }
 
@@ -96,5 +100,6 @@ class App
     else
       puts 'Person ID does not exist'
     end
+    puts
   end
 end
