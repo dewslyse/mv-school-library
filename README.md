@@ -21,11 +21,19 @@ This will create a directory in the name of the project folder.
 
 - Navigate to project folder using `cd mv-school-library`
 
-## Author
+## Authors
 
 👤 **@dewslyse**
 
 - GitHub: [@dewslyse](https://github.com/dewslyse)
+
+👤 **@emyrue**
+
+- GitHub: [@emyrue](https://github.com/emyrue)
+- Twitter: [@EmyrueRobertson](https://twitter.com/EmyrueRobertson)
+- LinkedIn: [LinkedIn](https://www.linkedin.com/in/emilyruthrobertson/)
+
+
 
 ## 🤝 Contributing
 
