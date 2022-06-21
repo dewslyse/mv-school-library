@@ -37,9 +37,9 @@ class App
     rentals = JSON.parse(rentals_file.read)
     rentals_array = []
     rentals.each do |rental|
-      # person = people_array.find { |element| rental["person_id"] == element.id}
-      # rentals_array << Rental.new(rental["date"], book_array[0], person)
-      puts person
+      person = people_array.find { |item| rental["person_id"] == item.id }
+      book = book_array.find { |item| rental["title"] == item.title && rental["author"] == item.author }
+      rentals_array << Rental.new(rental["date"], book, person)
     end
     rentals_file.close
 
