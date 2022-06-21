@@ -114,8 +114,8 @@ class App
   def on_exit
     all_books = []
     @all_books.each do |book|
-      json = {"title": "#{book.title}", "author": "#{book.author}"}
-      all_books << json
+      json_object = {"title": "#{book.title}", "author": "#{book.author}"}
+      all_books << json_object
     end
     File.open("books.json", "w") {|f| f.write JSON.generate(all_books)}
   end
