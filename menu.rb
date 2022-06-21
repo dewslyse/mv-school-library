@@ -16,6 +16,7 @@ def menu # rubocop:disable Metrics/CyclomaticComplexity
     when 5 then app.create_rental
     when 6 then app.list_rentals
     when 7
+      app.on_exit
       puts "Thank you for using this app \n\n"
       abort
     else

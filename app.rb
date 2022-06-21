@@ -2,12 +2,20 @@ require_relative 'book'
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'rental'
+require 'json'
 
 class App
   attr_reader :all_books, :all_persons, :all_rentals
 
   def initialize
-    @all_books = []
+    file = File.open("books.json")
+    books = JSON.parse(file.read)
+    book_array = []
+    books.each do |book|
+      book_array << Book.new(book["title"], book["author"])
+    end
+    file.close
+    @all_books = book_array
     @all_persons = []
     @all_rentals = []
   end
@@ -101,5 +109,14 @@ class App
       puts 'Person ID does not exist'
     end
     puts
+  end
+
+  def on_exit
+    all_books = []
+    @all_books.each do |book|
+      json = {"title": "#{book.title}", "author": "#{book.author}"}
+      all_books << json
+    end
+    File.open("books.json", "w") {|f| f.write JSON.generate(all_books)}
   end
 end
