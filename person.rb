@@ -2,9 +2,9 @@ require_relative 'nameable'
 require_relative 'decorator'
 
 class Person < Nameable
-  def initialize(age, name = 'Unknown', parent_permission: true)
+  def initialize(age:, name: 'Unknown', parent_permission: true, id: rand(1..1000))
     super()
-    @id = "#{name}#{rand(1..1000)}"
+    @id = "#{id}"
     @name = name
     @age = age
     @parent_permission = parent_permission

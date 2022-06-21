@@ -26,9 +26,9 @@ class App
         else
           permission = false
         end
-        people_array << Student.new(person["age"].to_i, person["name"], permission)
+        people_array << Student.new(age: person["age"].to_i, name: person["name"], parent_permission: permission, id: person["id"])
       else
-        people_array << Teacher.new(person["specialization"], person["age"].to_i, person["name"])
+        people_array << Teacher.new(specialization: person["specialization"], age: person["age"].to_i, name: person["name"], id: person["id"])
       end
     end
     people_file.close
@@ -70,11 +70,11 @@ class App
       print 'Has parent permission? [Y/N]: '
       permission = gets.chomp.downcase
       parent_permission = permission == 'y'
-      @all_persons << Student.new(age, name, parent_permission)
+      @all_persons << Student.new(age: age, name: name, parent_permission: parent_permission)
     else
       print 'Specialization: '
       specialization = gets.chomp
-      @all_persons << Teacher.new(specialization, age, name)
+      @all_persons << Teacher.new(specialization: specialization, age: age, name: name)
     end
     puts "Person created successfully \n"
     puts
@@ -139,9 +139,9 @@ class App
     all_persons = []
     @all_persons.each do |person|
       if person.class.to_s == 'Student'
-        json_object = {"type": "Student", "age": "#{person.age}", "name": "#{person.name}", "parent_permission": "#{person.parent_permission}" }
+        json_object = {"type": "Student", "id": "#{person.id}", "age": "#{person.age}", "name": "#{person.name}", "parent_permission": "#{person.parent_permission}" }
       else 
-        json_object = {"type": "Teacher", "age": "#{person.age}", "name": "#{person.name}", "specialization": "#{person.specialization}" }
+        json_object = {"type": "Teacher", "id": "#{person.id}", "age": "#{person.age}", "name": "#{person.name}", "specialization": "#{person.specialization}" }
       end
       all_persons << json_object
     end
