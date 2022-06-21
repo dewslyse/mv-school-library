@@ -8,15 +8,33 @@ class App
   attr_reader :all_books, :all_persons, :all_rentals
 
   def initialize
-    file = File.open("books.json")
-    books = JSON.parse(file.read)
+    book_file = File.open("books.json")
+    books = JSON.parse(book_file.read)
     book_array = []
     books.each do |book|
       book_array << Book.new(book["title"], book["author"])
     end
-    file.close
+    book_file.close
+
+    people_file = File.open("people.json")
+    people = JSON.parse(people_file.read)
+    people_array = []
+    people.each do |person|
+      if person["type"] == "Student"
+        if person["parent_permission"] == "true"
+          permission = true
+        else
+          permission = false
+        end
+        people_array << Student.new(person["age"].to_i, person["name"], permission)
+      else
+        people_array << Teacher.new(person["specialization"], person["age"].to_i, person["name"])
+      end
+    end
+    people_file.close
+
     @all_books = book_array
-    @all_persons = []
+    @all_persons = people_array
     @all_rentals = []
   end
 
@@ -117,6 +135,17 @@ class App
       json_object = {"title": "#{book.title}", "author": "#{book.author}"}
       all_books << json_object
     end
+
+    all_persons = []
+    @all_persons.each do |person|
+      if person.class.to_s == 'Student'
+        json_object = {"type": "Student", "age": "#{person.age}", "name": "#{person.name}", "parent_permission": "#{person.parent_permission}" }
+      else 
+        json_object = {"type": "Teacher", "age": "#{person.age}", "name": "#{person.name}", "specialization": "#{person.specialization}" }
+      end
+      all_persons << json_object
+    end
     File.open("books.json", "w") {|f| f.write JSON.generate(all_books)}
+    File.open("people.json", "w") { |f| f.write JSON.generate(all_persons) }
   end
 end
