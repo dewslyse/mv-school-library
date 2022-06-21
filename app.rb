@@ -2,14 +2,57 @@ require_relative 'book'
 require_relative 'student'
 require_relative 'teacher'
 require_relative 'rental'
+require_relative 'app_module'
+require 'json'
 
 class App
+  include Exit
   attr_reader :all_books, :all_persons, :all_rentals
 
   def initialize
-    @all_books = []
-    @all_persons = []
-    @all_rentals = []
+    @all_books = saved_books
+    @all_persons = saved_people
+
+    rentals_file = File.open('rentals.json')
+    rentals = JSON.parse(rentals_file.read)
+    rentals_array = []
+    rentals.each do |rental|
+      person = @all_persons.find { |item| rental['person_id'] == item.id }
+      book = @all_books.find { |item| rental['title'] == item.title && rental['author'] == item.author }
+      rentals_array << Rental.new(rental['date'], book, person)
+    end
+    rentals_file.close
+
+    @all_rentals = rentals_array
+  end
+
+  def saved_books
+    book_file = File.open('books.json')
+    books = JSON.parse(book_file.read)
+    book_array = []
+    books.each do |book|
+      book_array << Book.new(book['title'], book['author'])
+    end
+    book_file.close
+    book_array
+  end
+
+  def saved_people
+    people_file = File.open('people.json')
+    people = JSON.parse(people_file.read)
+    people_array = []
+    people.each do |person|
+      if person['type'] == 'Student'
+        permission = person['parent_permission'] == 'true'
+        people_array << Student.new(age: person['age'].to_i, name: person['name'], parent_permission: permission,
+                                    id: person['id'].to_i)
+      else
+        people_array << Teacher.new(specialization: person['specialization'], age: person['age'].to_i,
+                                    name: person['name'], id: person['id'].to_i)
+      end
+    end
+    people_file.close
+    people_array
   end
 
   def list_books
@@ -60,7 +103,7 @@ class App
     print 'Has parent permission? [Y/N]: '
     permission = gets.chomp.downcase
     parent_permission = permission == 'y'
-    @all_persons << Student.new(age, name, parent_permission)
+    @all_persons << Student.new(age: age, name: name, parent_permission: parent_permission)
     puts "Person created successfully\n\n"
   end
 
@@ -71,7 +114,7 @@ class App
     name = gets.chomp
     print 'Specialization: '
     specialization = gets.chomp
-    @all_persons << Teacher.new(specialization, age, name)
+    @all_persons << Teacher.new(specialization: specialization, age: age, name: name)
     puts "Person created successfully\n\n"
   end
 
@@ -123,5 +166,14 @@ class App
       puts 'Person ID does not exist'
     end
     puts
+  end
+
+  def on_exit_books
+    all_books = []
+    @all_books.each do |book|
+      json_object = { title: book.title.to_s, author: book.author.to_s }
+      all_books << json_object
+    end
+    File.write('books.json', JSON.generate(all_books))
   end
 end
