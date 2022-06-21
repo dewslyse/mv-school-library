@@ -26,9 +26,9 @@ class App
         else
           permission = false
         end
-        people_array << Student.new(age: person["age"].to_i, name: person["name"], parent_permission: permission, id: person["id"])
+        people_array << Student.new(age: person["age"].to_i, name: person["name"], parent_permission: permission, id: person["id"].to_i)
       else
-        people_array << Teacher.new(specialization: person["specialization"], age: person["age"].to_i, name: person["name"], id: person["id"])
+        people_array << Teacher.new(specialization: person["specialization"], age: person["age"].to_i, name: person["name"], id: person["id"].to_i)
       end
     end
     people_file.close
@@ -37,9 +37,9 @@ class App
     rentals = JSON.parse(rentals_file.read)
     rentals_array = []
     rentals.each do |rental|
-      person_index = 0
-      book_index = 0
-      rentals_array << Rental.new(rental["date"], book_array[book_index], people_array[person_index])
+      # person = people_array.find { |element| rental["person_id"] == element.id}
+      # rentals_array << Rental.new(rental["date"], book_array[0], person)
+      puts person
     end
     rentals_file.close
 
