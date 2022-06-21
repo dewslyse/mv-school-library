@@ -33,9 +33,19 @@ class App
     end
     people_file.close
 
+    rentals_file = File.open("rentals.json")
+    rentals = JSON.parse(rentals_file.read)
+    rentals_array = []
+    rentals.each do |rental|
+      person_index = 0
+      book_index = 0
+      rentals_array << Rental.new(rental["date"], book_array[book_index], people_array[person_index])
+    end
+    rentals_file.close
+
     @all_books = book_array
     @all_persons = people_array
-    @all_rentals = []
+    @all_rentals = rentals_array
   end
 
   def list_books
@@ -145,7 +155,14 @@ class App
       end
       all_persons << json_object
     end
+
+    all_rentals = []
+    @all_rentals.each do |rental|
+      json_object = {"date": "#{rental.date}", "title": "#{rental.book.title}", "author": "#{rental.book.author}", "person_id": "#{rental.person.id}"}
+      all_rentals << json_object
+    end
     File.open("books.json", "w") {|f| f.write JSON.generate(all_books)}
     File.open("people.json", "w") { |f| f.write JSON.generate(all_persons) }
+    File.open("rentals.json", "w") { |f| f.write JSON.generate(all_rentals) }
   end
 end
