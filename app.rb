@@ -8,44 +8,49 @@ class App
   attr_reader :all_books, :all_persons, :all_rentals
 
   def initialize
-    book_file = File.open("books.json")
-    books = JSON.parse(book_file.read)
-    book_array = []
-    books.each do |book|
-      book_array << Book.new(book["title"], book["author"])
-    end
-    book_file.close
+    @all_books = saved_books
+    @all_persons = saved_people
 
-    people_file = File.open("people.json")
-    people = JSON.parse(people_file.read)
-    people_array = []
-    people.each do |person|
-      if person["type"] == "Student"
-        if person["parent_permission"] == "true"
-          permission = true
-        else
-          permission = false
-        end
-        people_array << Student.new(age: person["age"].to_i, name: person["name"], parent_permission: permission, id: person["id"].to_i)
-      else
-        people_array << Teacher.new(specialization: person["specialization"], age: person["age"].to_i, name: person["name"], id: person["id"].to_i)
-      end
-    end
-    people_file.close
-
-    rentals_file = File.open("rentals.json")
+    rentals_file = File.open('rentals.json')
     rentals = JSON.parse(rentals_file.read)
     rentals_array = []
     rentals.each do |rental|
-      person = people_array.find { |item| rental["person_id"] == item.id }
-      book = book_array.find { |item| rental["title"] == item.title && rental["author"] == item.author }
-      rentals_array << Rental.new(rental["date"], book, person)
+      person = @all_persons.find { |item| rental['person_id'] == item.id }
+      book = @all_books.find { |item| rental['title'] == item.title && rental['author'] == item.author }
+      rentals_array << Rental.new(rental['date'], book, person)
     end
     rentals_file.close
 
-    @all_books = book_array
-    @all_persons = people_array
     @all_rentals = rentals_array
+  end
+
+  def saved_books
+    book_file = File.open('books.json')
+    books = JSON.parse(book_file.read)
+    book_array = []
+    books.each do |book|
+      book_array << Book.new(book['title'], book['author'])
+    end
+    book_file.close
+    book_array
+  end
+
+  def saved_people
+    people_file = File.open('people.json')
+    people = JSON.parse(people_file.read)
+    people_array = []
+    people.each do |person|
+      if person['type'] == 'Student'
+        permission = person['parent_permission'] == 'true'
+        people_array << Student.new(age: person['age'].to_i, name: person['name'], parent_permission: permission,
+                                    id: person['id'].to_i)
+      else
+        people_array << Teacher.new(specialization: person['specialization'], age: person['age'].to_i,
+                                    name: person['name'], id: person['id'].to_i)
+      end
+    end
+    people_file.close
+    people_array
   end
 
   def list_books
@@ -139,30 +144,36 @@ class App
     puts
   end
 
-  def on_exit
+  def on_exit_books
     all_books = []
     @all_books.each do |book|
-      json_object = {"title": "#{book.title}", "author": "#{book.author}"}
+      json_object = { title: book.title.to_s, author: book.author.to_s }
       all_books << json_object
     end
+    File.write('books.json', JSON.generate(all_books))
+  end
+
+  def on_exit
+    on_exit_books
 
     all_persons = []
     @all_persons.each do |person|
-      if person.class.to_s == 'Student'
-        json_object = {"type": "Student", "id": "#{person.id}", "age": "#{person.age}", "name": "#{person.name}", "parent_permission": "#{person.parent_permission}" }
-      else 
-        json_object = {"type": "Teacher", "id": "#{person.id}", "age": "#{person.age}", "name": "#{person.name}", "specialization": "#{person.specialization}" }
-      end
+      json_object = if person.class.to_s == 'Student'
+                      { type: 'Student', id: person.id.to_s, age: person.age.to_s, name: person.name.to_s,
+                        parent_permission: person.parent_permission.to_s }
+                    else
+                      { type: 'Teacher', id: person.id.to_s, age: person.age.to_s, name: person.name.to_s,
+                        specialization: person.specialization.to_s }
+                    end
       all_persons << json_object
     end
-
     all_rentals = []
     @all_rentals.each do |rental|
-      json_object = {"date": "#{rental.date}", "title": "#{rental.book.title}", "author": "#{rental.book.author}", "person_id": "#{rental.person.id}"}
+      json_object = { date: rental.date.to_s, title: rental.book.title.to_s, author: rental.book.author.to_s,
+                      person_id: rental.person.id.to_s }
       all_rentals << json_object
     end
-    File.open("books.json", "w") {|f| f.write JSON.generate(all_books)}
-    File.open("people.json", "w") { |f| f.write JSON.generate(all_persons) }
-    File.open("rentals.json", "w") { |f| f.write JSON.generate(all_rentals) }
+    File.write('rentals.json', JSON.generate(all_rentals))
+    File.write('people.json', JSON.generate(all_persons))
   end
 end

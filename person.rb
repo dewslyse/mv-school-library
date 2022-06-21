@@ -4,7 +4,7 @@ require_relative 'decorator'
 class Person < Nameable
   def initialize(age:, name: 'Unknown', parent_permission: true, id: rand(1..1000))
     super()
-    @id = "#{id}"
+    @id = id.to_s
     @name = name
     @age = age
     @parent_permission = parent_permission
