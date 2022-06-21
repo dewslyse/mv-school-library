@@ -54,48 +54,70 @@ class App
   end
 
   def list_books
-    puts 'All books'
-    @all_books.each do |book|
-      puts "Title: \"#{book.title}\", Author: #{book.author}"
+    puts "\nAll books"
+
+    if @all_books.length.zero?
+      puts 'Please choose option (4) to add a book'
+    else
+      @all_books.each do |book|
+        puts "Title: \"#{book.title}\", Author: #{book.author}"
+      end
     end
     puts
   end
 
   def list_people
-    puts 'All persons'
-    @all_persons.each do |person|
-      puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+    puts "\nAll persons"
+
+    if @all_persons.length.zero?
+      puts 'Please choose option (3) to add a person'
+    else
+      @all_persons.each do |person|
+        puts "[#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
+      end
     end
     puts
   end
 
   def create_person
-    puts 'Add a person'
+    puts "\nAdd a person"
     print 'Do you want to create a student (1) or a teacher (2)? [Input the number]: '
     type_of_person = gets.chomp.to_i
 
-    create_person while type_of_person != 1 && type_of_person != 2
+    case type_of_person
+    when 1 then create_student
+    when 2 then create_teacher
+    else
+      puts 'Please choose (1) or (2)'
+      create_person
+    end
+  end
 
+  def create_student
     print 'Age: '
     age = gets.chomp
     print 'Name: '
     name = gets.chomp
+    print 'Has parent permission? [Y/N]: '
+    permission = gets.chomp.downcase
+    parent_permission = permission == 'y'
+    @all_persons << Student.new(age: age, name: name, parent_permission: parent_permission)
+    puts "Person created successfully\n\n"
+  end
 
-    if type_of_person == 1
-      print 'Has parent permission? [Y/N]: '
-      permission = gets.chomp.downcase
-      parent_permission = permission == 'y'
-      @all_persons << Student.new(age: age, name: name, parent_permission: parent_permission)
-    else
-      print 'Specialization: '
-      specialization = gets.chomp
-      @all_persons << Teacher.new(specialization: specialization, age: age, name: name)
-    end
-    puts "Person created successfully \n"
-    puts
+  def create_teacher
+    print 'Age: '
+    age = gets.chomp
+    print 'Name: '
+    name = gets.chomp
+    print 'Specialization: '
+    specialization = gets.chomp
+    @all_persons << Teacher.new(specialization: specialization, age: age, name: name)
+    puts "Person created successfully\n\n"
   end
 
   def create_book
+    puts
     puts 'Create a book'
     print 'Title: '
     title = gets.chomp
@@ -107,19 +129,19 @@ class App
   end
 
   def create_rental
-    puts 'Select a book from the following list by number'
+    puts "\nSelect a book from the following list by number"
     @all_books.each_with_index do |book, index|
       puts "#{index}) Title: \"#{book.title}\", Author: #{book.author}"
     end
     selected_book = gets.chomp.to_i
 
-    puts 'Select a person from the following list by number (not id)'
+    puts "\nSelect a person from the following list by number (not id)"
     @all_persons.each_with_index do |person, index|
       puts "#{index}) [#{person.class}] Name: #{person.name}, ID: #{person.id}, Age: #{person.age}"
     end
     selected_person = gets.chomp.to_i
 
-    puts 'Enter rental date [yyyy/mm/dd]'
+    puts "\nEnter rental date [yyyy/mm/dd]"
     print 'Date: '
     date = gets.chomp
 
@@ -128,7 +150,7 @@ class App
   end
 
   def list_rentals
-    puts 'ID of person: '
+    print 'ID of person: '
     id = gets.chomp
 
     person = @all_persons.find { |item| id == item.id }
