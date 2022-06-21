@@ -12,7 +12,7 @@ class Person < Nameable
   end
 
   attr_reader :id, :rentals
-  attr_accessor :name, :age
+  attr_accessor :name, :age, :parent_permission
 
   def correct_name
     @name
