@@ -10,7 +10,7 @@ describe Book do
       expect(@book).to be_instance_of(Book)
     end
 
-    it 'has title' do 
+    it 'has title' do
       expect(@book.title).to eq 'Book-1'
     end
 

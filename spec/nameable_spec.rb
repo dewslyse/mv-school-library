@@ -7,7 +7,7 @@ describe Nameable do
     end
 
     it 'raises error' do
-      expect{@nameable.correct_name}.to raise_error(NotImplementedError)
+      expect { @nameable.correct_name }.to raise_error(NotImplementedError)
     end
   end
 end

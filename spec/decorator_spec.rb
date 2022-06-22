@@ -30,7 +30,7 @@ describe Decorator do
     end
 
     it 'returns correct_name for TrimmerDecorator' do
-      expect(@trimmer.correct_name[0,4]).to eq 'sela'
+      expect(@trimmer.correct_name[0, 4]).to eq 'sela'
     end
   end
 end

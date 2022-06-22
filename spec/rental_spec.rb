@@ -20,9 +20,8 @@ describe Rental do
       expect(@rental.person).to be_instance_of(Person)
     end
 
-    it 'has date' do 
+    it 'has date' do
       expect(@rental.date).to eq '2020/03/12'
     end
-
   end
 end
