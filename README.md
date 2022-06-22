@@ -21,6 +21,10 @@ This will create a directory in the name of the project folder.
 
 - Navigate to project folder using `cd mv-school-library`
 
+### Tests
+- Run `gem install rspec`
+- Run `rspec` to run the tests
+
 ## Authors
 
 👤 **@dewslyse**
